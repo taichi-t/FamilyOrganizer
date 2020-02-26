@@ -82,6 +82,7 @@ class App extends Component {
     this.props.changeColumn(newState);
   };
   render() {
+    console.log(this.props);
     return (
       <DragDropContext
         onDragEnd={this.onDragEnd}
