@@ -14,6 +14,7 @@ import { changeColumn } from "../store/actions/action";
 class App extends Component {
   onDragStart = start => {
     const homeIndex = this.props.columnOrder.indexOf(start.source.droppableId);
+
     this.props.changeHomeIndex(homeIndex);
   };
 
@@ -81,7 +82,6 @@ class App extends Component {
     this.props.changeColumn(newState);
   };
   render() {
-    console.log(this.props);
     return (
       <DragDropContext
         onDragEnd={this.onDragEnd}
