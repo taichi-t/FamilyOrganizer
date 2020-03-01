@@ -11,17 +11,27 @@ import { changeHomeIndex } from "../store/actions/action";
 import { changeIndex } from "../store/actions/action";
 import { changeColumn } from "../store/actions/action";
 
+import { compose } from "redux";
+
+import { firestoreConnect } from "react-redux-firebase";
+
 class App extends Component {
   onDragStart = start => {
-    const homeIndex = this.props.columnOrder.indexOf(start.source.droppableId);
+    const { projectsData } = this.props;
+
+    const projects =
+      projectsData && projectsData.reduce((obj, data) => ({ ...obj, data }));
+
+    const homeIndex = projects.columnOrder.indexOf(start.source.droppableId);
 
     this.props.changeHomeIndex(homeIndex);
   };
 
   onDragEnd = result => {
-    // this.setState({
-    //   homeIndex: null
-    // });
+    const { projectsData } = this.props;
+
+    const projects =
+      projectsData && projectsData.reduce((obj, data) => ({ ...obj, data }));
     const homeIndex = null;
     this.props.changeHomeIndex(homeIndex);
 
@@ -37,8 +47,8 @@ class App extends Component {
       return;
     }
 
-    const start = this.props.columns[source.droppableId];
-    const finish = this.props.columns[destination.droppableId];
+    const start = projects.columns[source.droppableId];
+    const finish = projects.columns[destination.droppableId];
 
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
@@ -72,9 +82,9 @@ class App extends Component {
     };
 
     const newState = {
-      ...this.props,
+      ...projects,
       columns: {
-        ...this.props.columns,
+        ...projects.columns,
         [newStart.id]: newStart,
         [newFinish.id]: newFinish
       }
@@ -82,29 +92,36 @@ class App extends Component {
     this.props.changeColumn(newState);
   };
   render() {
+    const { projectsData } = this.props;
+
+    const projects =
+      projectsData && projectsData.reduce((obj, data) => ({ ...obj, data }));
+
+    console.log(projects);
     return (
       <DragDropContext
         onDragEnd={this.onDragEnd}
         onDragStart={this.onDragStart}
       >
         <Container>
-          {this.props.columnOrder.map((columnId, index) => {
-            const column = this.props.columns[columnId];
-            const tasks = column.taskIds.map(
-              taskId => this.props.tasks[taskId]
-            );
+          {projects &&
+            projects.columnOrder.map((columnId, index) => {
+              const column = projects.columns[columnId];
+              const tasks = column.taskIds.map(
+                taskId => projects.tasks[taskId]
+              );
 
-            // const isDropDisabled = index < this.state.homeIndex;
+              // const isDropDisabled = index < this.state.homeIndex;
 
-            return (
-              <Column
-                key={column.id}
-                column={column}
-                tasks={tasks}
-                // isDropDisabled={isDropDisabled}
-              />
-            );
-          })}
+              return (
+                <Column
+                  key={column.id}
+                  column={column}
+                  tasks={tasks}
+                  // isDropDisabled={isDropDisabled}
+                />
+              );
+            })}
         </Container>
       </DragDropContext>
     );
@@ -112,7 +129,10 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  return state;
+  return {
+    // projects: state.projects,
+    projectsData: state.firestore.ordered && state.firestore.ordered.projects
+  };
 };
 const mapDispatchToProps = dispatch => {
   return {
@@ -122,7 +142,16 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect(() => {
+    return [
+      {
+        collection: "projects"
+      }
+    ];
+  })
+)(App);
 
 //styled components
 
