@@ -23,7 +23,6 @@ const TaskLisk = styled.div`
 
 export default class Column extends React.Component {
   render() {
-    console.log(this.props);
     return (
       <Container>
         <Title>{this.props.column.title}</Title>
