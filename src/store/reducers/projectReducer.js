@@ -1,6 +1,6 @@
-import initialData from "../../initial-data";
+// import initialData from "../../initial-data";
 
-const initialState = initialData;
+const initialState = [];
 
 const projectReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -21,6 +21,17 @@ const projectReducer = (state = initialState, action) => {
       };
     case "CHANGE_COLUMN":
       state = action.newState;
+      return state;
+
+    case "SETTING_DATA_FROM_FIRESTORE_SUCCESS":
+      state = action.preState;
+
+      return {
+        ...state.projects,
+        ...action.payload
+      };
+
+    case "SETTING_DATA_FROM_FIRESTORE_ERRO":
       return state;
 
     default: {
