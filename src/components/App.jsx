@@ -1,26 +1,30 @@
 import React, { Component } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
-import "@atlaskit/css-reset";
 
+//styles
 import Column from "./Column";
 import styled from "styled-components";
 import { connect } from "react-redux";
+import { DragDropContext } from "react-beautiful-dnd";
+import "@atlaskit/css-reset";
 
 //actions
 import { changeHomeIndex } from "../store/actions/action";
 import { changeIndex } from "../store/actions/action";
 import { changeColumn } from "../store/actions/action";
+import { settingInitialStateFromFirestore } from "../store/actions/action";
 
+//react,react-redux,react-redux-firestore
 import { compose } from "redux";
-
 import { firestoreConnect } from "react-redux-firebase";
 
-class App extends Component {
-  onDragStart = start => {
-    const { projectsData } = this.props;
+//utils
 
-    const projects =
-      projectsData && projectsData.reduce((obj, data) => ({ ...obj, data }));
+class App extends Component {
+  componentWillMount() {
+    this.props.settingInitialStateFromFirestore();
+  }
+  onDragStart = start => {
+    const projects = this.props.projects;
 
     const homeIndex = projects.columnOrder.indexOf(start.source.droppableId);
 
@@ -28,10 +32,8 @@ class App extends Component {
   };
 
   onDragEnd = result => {
-    const { projectsData } = this.props;
+    const projects = this.props.projects;
 
-    const projects =
-      projectsData && projectsData.reduce((obj, data) => ({ ...obj, data }));
     const homeIndex = null;
     this.props.changeHomeIndex(homeIndex);
 
@@ -71,7 +73,8 @@ class App extends Component {
     startTaskIds.splice(source.index, 1);
     const newStart = {
       ...start,
-      taskIds: startTaskIds
+      taskIds: startTaskIds,
+      draggableId: draggableId
     };
 
     const finishTaskIds = Array.from(finish.taskIds);
@@ -82,29 +85,28 @@ class App extends Component {
     };
 
     const newState = {
-      ...projects,
-      columns: {
-        ...projects.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish
-      }
+      ...projects.columns,
+      [newStart.id]: newStart,
+      [newFinish.id]: newFinish
     };
-    this.props.changeColumn(newState);
+
+    const changedTasks = {
+      newStart: newStart,
+      newFinish: newFinish
+    };
+
+    this.props.changeColumn(newState, changedTasks);
   };
   render() {
-    const { projectsData } = this.props;
+    const projects = this.props.projects;
 
-    const projects =
-      projectsData && projectsData.reduce((obj, data) => ({ ...obj, data }));
-
-    console.log(projects);
     return (
       <DragDropContext
         onDragEnd={this.onDragEnd}
         onDragStart={this.onDragStart}
       >
         <Container>
-          {projects &&
+          {projects.length !== 0 &&
             projects.columnOrder.map((columnId, index) => {
               const column = projects.columns[columnId];
               const tasks = column.taskIds.map(
@@ -118,6 +120,7 @@ class App extends Component {
                   key={column.id}
                   column={column}
                   tasks={tasks}
+                  index={index}
                   // isDropDisabled={isDropDisabled}
                 />
               );
@@ -130,27 +133,23 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    // projects: state.projects,
-    projectsData: state.firestore.ordered && state.firestore.ordered.projects
+    projects: state.projects
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
     changeHomeIndex: homeIndex => dispatch(changeHomeIndex(homeIndex)),
     changeIndex: newColumn => dispatch(changeIndex(newColumn)),
-    changeColumn: newState => dispatch(changeColumn(newState))
+    changeColumn: (newState, changedTasks) =>
+      dispatch(changeColumn(newState, changedTasks)),
+    settingInitialStateFromFirestore: empty =>
+      dispatch(settingInitialStateFromFirestore(empty))
   };
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect(() => {
-    return [
-      {
-        collection: "projects"
-      }
-    ];
-  })
+  firestoreConnect()
 )(App);
 
 //styled components
