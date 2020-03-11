@@ -43,19 +43,20 @@ export default class Column extends React.Component {
 //style
 
 const Container = styled.div`
-  margin: 8px;
+  background-color: #eceff1;
+  padding: 10px;
   border: 1px solid lightgrey;
   border-radius: 2px;
-  width: 220px;
+  width: 33.333%;
   display: flex;
   flex-direction: column;
 `;
-const Title = styled.h3`
+const Title = styled.h2`
   padding: 8px;
 `;
 const TaskLisk = styled.div`
   padding: 8px;
-  background-color: ${props => (props.isDraggingOver ? "skyblue" : "white")};
+  background-color: ${props => (props.isDraggingOver ? "skyblue" : "#eceff1")};
   flex-grow: 1;
   min-height: 100px;
 `;

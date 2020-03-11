@@ -156,5 +156,6 @@ export default compose(
 //styled components
 
 const Container = styled.div`
+  background-color: #fff;
   display: flex;
 `;
