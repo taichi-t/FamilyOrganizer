@@ -21,7 +21,9 @@ class Task extends React.Component {
             isDragging={snapshot.isDragging}
             {...provided.dragHandleProps}
           >
+            {this.props.task.title}
             {this.props.task.content}
+
             <button onClick={handleClick}>delete</button>
           </Container>
         )}
