@@ -73,7 +73,8 @@ class App extends Component {
     startTaskIds.splice(source.index, 1);
     const newStart = {
       ...start,
-      taskIds: startTaskIds
+      taskIds: startTaskIds,
+      draggableId: draggableId
     };
 
     const finishTaskIds = Array.from(finish.taskIds);
@@ -84,14 +85,17 @@ class App extends Component {
     };
 
     const newState = {
-      ...projects,
-      columns: {
-        ...projects.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish
-      }
+      ...projects.columns,
+      [newStart.id]: newStart,
+      [newFinish.id]: newFinish
     };
-    this.props.changeColumn(newState);
+
+    const changedTasks = {
+      newStart: newStart,
+      newFinish: newFinish
+    };
+
+    this.props.changeColumn(newState, changedTasks);
   };
   render() {
     const projects = this.props.projects;
@@ -116,6 +120,7 @@ class App extends Component {
                   key={column.id}
                   column={column}
                   tasks={tasks}
+                  index={index}
                   // isDropDisabled={isDropDisabled}
                 />
               );
@@ -135,7 +140,8 @@ const mapDispatchToProps = dispatch => {
   return {
     changeHomeIndex: homeIndex => dispatch(changeHomeIndex(homeIndex)),
     changeIndex: newColumn => dispatch(changeIndex(newColumn)),
-    changeColumn: newState => dispatch(changeColumn(newState)),
+    changeColumn: (newState, changedTasks) =>
+      dispatch(changeColumn(newState, changedTasks)),
     settingInitialStateFromFirestore: empty =>
       dispatch(settingInitialStateFromFirestore(empty))
   };
