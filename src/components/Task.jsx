@@ -5,6 +5,13 @@ import { deleteTask } from "../store/actions/action";
 import { compose } from "redux";
 import { connect } from "react-redux";
 
+//style
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 class Task extends React.Component {
   render() {
     const handleClick = e => {
@@ -21,10 +28,23 @@ class Task extends React.Component {
             isDragging={snapshot.isDragging}
             {...provided.dragHandleProps}
           >
-            {this.props.task.title}
-            {this.props.task.content}
-
-            <button onClick={handleClick}>delete</button>
+            <Card>
+              <CardContent>
+                <Typography variant="h5" component="h2">
+                  {this.props.task.title}
+                </Typography>
+                <Typography color="textSecondary" gutterBottom>
+                  {this.props.task.content}
+                </Typography>
+              </CardContent>
+              <Button
+                color="secondary"
+                startIcon={<DeleteIcon />}
+                onClick={handleClick}
+              >
+                Delete
+              </Button>
+            </Card>
           </Container>
         )}
       </Draggable>
@@ -43,14 +63,6 @@ export default compose(connect(null, mapDispatchToProps))(Task);
 //style
 
 const Container = styled.div`
-  border: 1px solid lightgrey;
-  border-radius: 2px;
-  padding: 8px;
-  margin-bottom: 8px;
-  background-color: ${props =>
-    props.isDragDisabled
-      ? "lightgrey"
-      : props.isDragging
-      ? "lightgreen"
-      : "white"};
+  margin-bottom: 10px;
+  background-color: ${props => (props.isDragDisabled ? "lightgrey" : "white")};
 `;
