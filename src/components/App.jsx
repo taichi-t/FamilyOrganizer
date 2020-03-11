@@ -98,6 +98,7 @@ class App extends Component {
     this.props.changeColumn(newState, changedTasks);
   };
   render() {
+    console.log(this.props);
     const projects = this.props.projects;
 
     return (

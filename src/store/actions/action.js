@@ -95,7 +95,7 @@ export const createProject = (title, content) => {
       .collection("projects")
       .doc("QK4DCwYDrWmunRsbbjIr");
     batch.update(taskRef, {
-      [`tasks.${id}`]: { content, id }
+      [`tasks.${id}`]: { content, id, title }
     });
 
     const columnRef = firestore
@@ -111,7 +111,7 @@ export const createProject = (title, content) => {
 
     dispatch({
       type: "CREATE_TASK_SUCCESS",
-      task: { content, id }
+      task: { content, id, title }
     });
   };
 };
