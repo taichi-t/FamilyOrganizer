@@ -2,12 +2,18 @@
 
 export const fetchDataFromFirestore = (firestore, collectionId) => {
   firestore
-    .collection(collectionId)
+    .collection("projects")
     .get()
-    .then(data => {
-      console.log(data);
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        dispatch({
+          type: "SETTING_DATA_FROM_FIRESTORE_SUCCESS",
+          preState: preState,
+          payload: doc.data()
+        });
+      });
     })
     .catch(err => {
-      console.log(err);
+      dispatch({ type: "SETTING_DATA_FROM_FIRESTORE_ERR", err });
     });
 };
