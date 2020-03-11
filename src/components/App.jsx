@@ -106,6 +106,9 @@ class App extends Component {
         onDragEnd={this.onDragEnd}
         onDragStart={this.onDragStart}
       >
+        <TitleContainer>
+          <h1 style={{ textAlign: "center" }}>Draggable Todo List</h1>
+        </TitleContainer>
         <Container>
           {projects.length !== 0 &&
             projects.columnOrder.map((columnId, index) => {
@@ -158,4 +161,10 @@ export default compose(
 const Container = styled.div`
   background-color: #fff;
   display: flex;
+`;
+
+const TitleContainer = styled.div`
+  font-size: 24px;
+  text-align: center;
+  margin: 24px 0;
 `;
