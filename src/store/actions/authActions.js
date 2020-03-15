@@ -9,6 +9,7 @@ export const signIn = credentials => {
         dispatch({ type: "LOGIN_SUCCESS" });
       })
       .catch(err => {
+        console.log(err);
         dispatch({ type: "LOGIN_ERR", err });
       });
   };
@@ -53,4 +54,7 @@ export const signUp = newUser => {
         dispatch({ type: "SIGN_UP_ERR", err });
       });
   };
+};
+export const resetAuthErr = () => {
+  return { type: "RESET_AUTH_ERR" };
 };

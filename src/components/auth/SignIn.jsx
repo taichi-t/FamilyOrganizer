@@ -38,7 +38,7 @@ class SignIn extends React.PureComponent {
             onChange={this.handleChange}
           />
           <button onClick={this.handleClick}>submit</button>
-          <div>{authErr ? <p>authErr</p> : null}</div>
+          <div>{authErr ? <p>{authErr}</p> : null}</div>
         </form>
       </div>
     );

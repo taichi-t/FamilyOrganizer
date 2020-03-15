@@ -14,13 +14,13 @@ class Create extends Component {
     content: null
   };
   render() {
-    const { columnId } = this.props;
+    const { columnId, profile } = this.props;
 
     const handleClick = e => {
       e.preventDefault();
       const title = this.state.title;
       const content = this.state.content;
-      this.props.createProject(title, content);
+      this.props.createProject(title, content, profile);
       this.setState({ title: null, content: null });
       document.getElementById("title").value = "";
       document.getElementById("content").value = "";
@@ -65,13 +65,20 @@ class Create extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
   return {
-    createProject: (title, content) => dispatch(createProject(title, content))
+    profile: state.firebase.profile
   };
 };
 
-export default connect(null, mapDispatchToProps)(Create);
+const mapDispatchToProps = dispatch => {
+  return {
+    createProject: (content, title, profile) =>
+      dispatch(createProject(content, title, profile))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Create);
 
 //style
 const Container = styled.div`
