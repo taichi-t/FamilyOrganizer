@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Navbar from "./Navbar";
+import { Redirect } from "react-router-dom";
 
 //styles
 import Column from "./Column";
@@ -16,8 +18,6 @@ import { settingInitialStateFromFirestore } from "../store/actions/action";
 //react,react-redux,react-redux-firestore
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
-
-//utils
 
 class App extends Component {
   componentWillMount() {
@@ -99,44 +99,49 @@ class App extends Component {
   };
   render() {
     const projects = this.props.projects;
-
+    const auth = this.props.auth;
+    if (!auth.uid) return <Redirect to="signIn" />;
     return (
-      <DragDropContext
-        onDragEnd={this.onDragEnd}
-        onDragStart={this.onDragStart}
-      >
+      <>
+        <Navbar />
         <TitleContainer>
           <h1 style={{ textAlign: "center" }}>Draggable Todo List</h1>
         </TitleContainer>
-        <Container>
-          {projects.length !== 0 &&
-            projects.columnOrder.map((columnId, index) => {
-              const column = projects.columns[columnId];
-              const tasks = column.taskIds.map(
-                taskId => projects.tasks[taskId]
-              );
+        <DragDropContext
+          onDragEnd={this.onDragEnd}
+          onDragStart={this.onDragStart}
+        >
+          <Container>
+            {projects.length !== 0 &&
+              projects.columnOrder.map((columnId, index) => {
+                const column = projects.columns[columnId];
+                const tasks = column.taskIds.map(
+                  taskId => projects.tasks[taskId]
+                );
 
-              // const isDropDisabled = index < this.state.homeIndex;
+                // const isDropDisabled = index < this.state.homeIndex;
 
-              return (
-                <Column
-                  key={column.id}
-                  column={column}
-                  tasks={tasks}
-                  index={index}
-                  // isDropDisabled={isDropDisabled}
-                />
-              );
-            })}
-        </Container>
-      </DragDropContext>
+                return (
+                  <Column
+                    key={column.id}
+                    column={column}
+                    tasks={tasks}
+                    index={index}
+                    // isDropDisabled={isDropDisabled}
+                  />
+                );
+              })}
+          </Container>
+        </DragDropContext>
+      </>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    projects: state.projects
+    projects: state.projects,
+    auth: state.firebase.auth
   };
 };
 const mapDispatchToProps = dispatch => {
