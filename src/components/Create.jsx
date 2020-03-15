@@ -49,11 +49,7 @@ class Create extends Component {
             id="content"
             style={{ marginBottom: 30, display: "block" }}
           />
-          {/* <input type="text" placeholder="title" id="title" /> */}
-          {/* <input type="text" placeholder="content" onChange={handleChange} /> */}
-          {/* <button datatype={columnId} onClick={handleClick}>
-          Create
-        </button> */}
+
           <Button
             variant="contained"
             color="primary"
