@@ -4,6 +4,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { deleteTask } from "../store/actions/action";
 import { compose } from "redux";
 import { connect } from "react-redux";
+import moment from "moment";
 
 //style
 import Card from "@material-ui/core/Card";
@@ -13,14 +14,16 @@ import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 class Task extends React.Component {
+  handleClick = e => {
+    const id = this.props.task.id;
+    const columnId = this.props.columnId;
+    this.props.deleteTask(id, columnId);
+  };
   render() {
-    const handleClick = e => {
-      const id = this.props.task.id;
-      const columnId = this.props.columnId;
-      this.props.deleteTask(id, columnId);
-    };
+    const { task } = this.props;
+
     return (
-      <Draggable draggableId={this.props.task.id} index={this.props.index}>
+      <Draggable draggableId={task.id} index={this.props.index}>
         {(provided, snapshot) => (
           <Container
             ref={provided.innerRef}
@@ -31,16 +34,23 @@ class Task extends React.Component {
             <Card>
               <CardContent>
                 <Typography variant="h5" component="h2">
-                  {this.props.task.title}
+                  {task.title}
                 </Typography>
+
                 <Typography color="textSecondary" gutterBottom>
-                  {this.props.task.content}
+                  {task.content}
+                </Typography>
+                <Typography color="textSecondary">
+                  Created by {task.firstName}
+                </Typography>
+                <Typography color="textSecondary">
+                  {moment(task.createdAt).calendar()}
                 </Typography>
               </CardContent>
               <Button
                 color="secondary"
                 startIcon={<DeleteIcon />}
-                onClick={handleClick}
+                onClick={this.handleClick}
               >
                 Delete
               </Button>

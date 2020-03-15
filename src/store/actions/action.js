@@ -84,18 +84,28 @@ export const changeColumn = (newState, cahngedTasks) => {
   };
 };
 
-export const createProject = (title, content) => {
+export const createProject = (title, content, profile) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firestore = getFirestore();
     const firebase = getFirebase();
     const id = firestore.collection("projects").doc().id;
+    const firstName = profile.firstName;
+    const lastName = profile.lastName;
+    const createdAt = new Date().getTime();
     const batch = firestore.batch();
 
     const taskRef = firestore
       .collection("projects")
       .doc("QK4DCwYDrWmunRsbbjIr");
     batch.update(taskRef, {
-      [`tasks.${id}`]: { content, id, title }
+      [`tasks.${id}`]: {
+        content,
+        id,
+        title,
+        firstName,
+        lastName,
+        createdAt
+      }
     });
 
     const columnRef = firestore
@@ -111,7 +121,7 @@ export const createProject = (title, content) => {
 
     dispatch({
       type: "CREATE_TASK_SUCCESS",
-      task: { content, id, title }
+      task: { content, id, title, createdAt }
     });
   };
 };
