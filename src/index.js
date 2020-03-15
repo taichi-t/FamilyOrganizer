@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
+import SignIn from "../src/components/auth/SignIn";
+import SignUp from "../src/components/auth/SignUp";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 //Redux
 import { createStore, compose } from "redux";
@@ -27,15 +30,24 @@ const store = createStore(
     applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
     reduxFirestore(fbConfig),
     reactReduxFirebase(fbConfig, {
-      useFirestoreForProfile: true
-      // userProfile: "users"
+      useFirestoreForProfile: true,
+      userProfile: "users",
+      attachAuthIsReady: true
     })
   )
 );
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
-);
+store.firebaseAuthIsReady.then(() => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route exact path="/signIn" component={SignIn} />
+          <Route exact path="/signup" component={SignUp} />
+        </Switch>
+      </BrowserRouter>
+    </Provider>,
+    document.getElementById("root")
+  );
+});
