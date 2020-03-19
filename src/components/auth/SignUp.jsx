@@ -4,6 +4,15 @@ import { signUp } from "../../store/actions/authActions";
 import { Redirect } from "react-router-dom";
 import Navbar from "../Navbar";
 
+//style
+import styled from "styled-components";
+import { StyledAlert } from "../childComponents/FormChildComponents";
+import { Button } from "../childComponents/Button";
+import { Title } from "../childComponents/FormChildComponents";
+import { Form } from "../childComponents/FormChildComponents";
+import { StyledTextField } from "../childComponents/FormChildComponents";
+import { ButtonContainer } from "../childComponents/FormChildComponents";
+
 class SignUp extends Component {
   state = {
     password: "",
@@ -25,37 +34,52 @@ class SignUp extends Component {
     const { auth, authErr } = this.props;
     if (auth.uid) return <Redirect to="/" />;
     return (
-      <div>
+      <>
         <Navbar />
-        <form action="submit">
-          <input
-            type="text"
-            placeholder="password"
-            id="password"
-            onChange={this.handleChange}
-          />
-          <input
-            type="text"
-            placeholder="email"
-            id="email"
-            onChange={this.handleChange}
-          />
-          <input
-            type="text"
-            placeholder="First Name"
-            id="firstName"
-            onChange={this.handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            id="lastName"
-            onChange={this.handleChange}
-          />
-          <button onClick={this.handleClick}>submit</button>
-          {authErr ? <p>{authErr}</p> : null}
-        </form>
-      </div>
+        <Container>
+          <Title>SignUp</Title>
+          <Form action="submit">
+            <StyledTextField
+              type="text"
+              label="email"
+              id="email"
+              fullWidth={true}
+              onChange={this.handleChange}
+            />
+            <StyledTextField
+              type="text"
+              label="password"
+              id="password"
+              fullWidth={true}
+              onChange={this.handleChange}
+            />
+            <StyledTextField
+              type="text"
+              label="first Name"
+              id="firstName"
+              fullWidth={true}
+              onChange={this.handleChange}
+            />
+            <StyledTextField
+              type="text"
+              label="last Name"
+              id="lastName"
+              fullWidth={true}
+              onChange={this.handleChange}
+            />
+            {authErr ? (
+              <StyledAlert variant="filled" severity="error">
+                {authErr}
+              </StyledAlert>
+            ) : null}
+            <ButtonContainer>
+              <Button color="#77d672" onClick={this.handleClick}>
+                submit
+              </Button>
+            </ButtonContainer>
+          </Form>
+        </Container>
+      </>
     );
   }
 }
@@ -73,3 +97,9 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+
+//styled
+
+const Container = styled.div`
+  text-align: center;
+`;

@@ -5,9 +5,7 @@ import { Redirect } from "react-router-dom";
 //styles
 import Column from "./Column";
 import styled from "styled-components";
-import { connect } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
-import "@atlaskit/css-reset";
 
 //actions
 import { changeHomeIndex } from "../store/actions/action";
@@ -18,6 +16,7 @@ import { settingInitialStateFromFirestore } from "../store/actions/action";
 //react,react-redux,react-redux-firestore
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
+import { connect } from "react-redux";
 
 class App extends Component {
   componentWillMount() {
@@ -119,15 +118,12 @@ class App extends Component {
                   taskId => projects.tasks[taskId]
                 );
 
-                // const isDropDisabled = index < this.state.homeIndex;
-
                 return (
                   <Column
                     key={column.id}
                     column={column}
                     tasks={tasks}
                     index={index}
-                    // isDropDisabled={isDropDisabled}
                   />
                 );
               })}
@@ -163,7 +159,6 @@ export default compose(
 //styled components
 
 const Container = styled.div`
-  background-color: #fff;
   display: flex;
 `;
 

@@ -1,5 +1,3 @@
-// import { firestore } from "firebase";
-
 export const fetchDataFromFirestore = (firestore, collectionId) => {
   firestore
     .collection("projects")

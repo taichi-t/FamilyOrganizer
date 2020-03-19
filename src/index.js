@@ -1,9 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
-import SignIn from "../src/components/auth/SignIn";
-import SignUp from "../src/components/auth/SignUp";
+import SignIn from "./components/auth/SignIn";
+import SignUp from "./components/auth/SignUp";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { GlobalStyle } from "./components/childComponents/globalStyle";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+import { theme } from "./components/childComponents/Muitheme";
 
 //Redux
 import { createStore, compose } from "redux";
@@ -16,7 +19,6 @@ import { reactReduxFirebase } from "react-redux-firebase";
 //Reducer
 import rootReducer from "./store/reducers/rootReducer";
 import { applyMiddleware } from "redux";
-
 import { getFirestore } from "redux-firestore";
 import { getFirebase } from "react-redux-firebase";
 
@@ -39,15 +41,18 @@ const store = createStore(
 
 store.firebaseAuthIsReady.then(() => {
   ReactDOM.render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={App} />
-          <Route exact path="/signIn" component={SignIn} />
-          <Route exact path="/signup" component={SignUp} />
-        </Switch>
-      </BrowserRouter>
-    </Provider>,
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <GlobalStyle />
+          <Switch>
+            <Route exact path="/" component={App} />
+            <Route exact path="/signIn" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    </MuiThemeProvider>,
     document.getElementById("root")
   );
 });
