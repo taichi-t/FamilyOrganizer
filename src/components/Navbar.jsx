@@ -10,7 +10,7 @@ class Navbar extends Component {
     const links = auth.uid ? (
       <SignInLinks profile={profile} />
     ) : (
-      <SignOutLinks />
+      <SignOutLinks location={this.props.location} />
     );
     return <div>{links}</div>;
   }

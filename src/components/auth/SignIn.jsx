@@ -4,6 +4,15 @@ import { signIn } from "../../store/actions/authActions";
 import Navbar from "../Navbar";
 import { Redirect } from "react-router-dom";
 
+//style
+import styled from "styled-components";
+import { StyledAlert } from "../childComponents/FormChildComponents";
+import { Button } from "../childComponents/Button";
+import { Title } from "../childComponents/FormChildComponents";
+import { Form } from "../childComponents/FormChildComponents";
+import { StyledTextField } from "../childComponents/FormChildComponents";
+import { ButtonContainer } from "../childComponents/FormChildComponents";
+
 class SignIn extends React.PureComponent {
   state = {
     password: "",
@@ -20,27 +29,44 @@ class SignIn extends React.PureComponent {
   };
   render() {
     const { authErr, auth } = this.props;
+
     if (auth.uid) return <Redirect to="/" />;
     return (
-      <div>
-        <Navbar />
-        <form action="submit">
-          <input
-            type="text"
-            id="password"
-            placeholder="password"
-            onChange={this.handleChange}
-          />
-          <input
-            type="text"
-            id="email"
-            placeholder="email"
-            onChange={this.handleChange}
-          />
-          <button onClick={this.handleClick}>submit</button>
-          <div>{authErr ? <p>{authErr}</p> : null}</div>
-        </form>
-      </div>
+      <>
+        <Navbar location={this.props.history.location.pathname} />
+        <Container>
+          <Title>SignIn</Title>
+          <Form action="submit">
+            <StyledTextField
+              id="email"
+              type="text"
+              label="email"
+              fullWidth={true}
+              onChange={this.handleChange}
+              color="primary"
+            />
+            <StyledTextField
+              type="text"
+              id="password"
+              label="password"
+              fullWidth={true}
+              onChange={this.handleChange}
+            />
+
+            {authErr ? (
+              <StyledAlert variant="filled" severity="error">
+                {authErr}
+              </StyledAlert>
+            ) : null}
+
+            <ButtonContainer>
+              <Button color="#77d672" onClick={this.handleClick}>
+                submit
+              </Button>
+            </ButtonContainer>
+          </Form>
+        </Container>
+      </>
     );
   }
 }
@@ -58,3 +84,9 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+
+//styled
+
+const Container = styled.div`
+  text-align: center;
+`;
